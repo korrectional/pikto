@@ -5,6 +5,8 @@
 #include "input/inputManager.h"
 #include "core/engineContext.h"
 #include "editor/editor.h"
+#include "scene/scene.h"
+
 class Engine
 {
 private:
@@ -12,6 +14,7 @@ private:
     Renderer renderer;
     InputManager inputManager;
     Editor editor;
+    Scene scene;
 public:
     Engine() : platform(), renderer(), inputManager(&platform) {};
     int init();
@@ -32,6 +35,11 @@ int Engine::init(){
     bool editorSuccessful = editor.init();
 
     std::cout<<platformSuccessful<<rendererSuccessful<<editorSuccessful<<"\n";
+    // and thsi one is ***TEMP***
+    GameObject* first = scene.instanctiate();
+    GameObject* second = scene.instanctiate();
+    second->transform.setPosition({0.0f, 2.0f, 0.0f});
+    // and thsi one is ***TEMP***
     if(platformSuccessful && rendererSuccessful && editorSuccessful) return 1;
     return -1;
 }
@@ -39,7 +47,12 @@ int Engine::init(){
 // returns false if should close
 bool Engine::update(){
     editor.processInput();
-    renderer.renderScene(editor.getCamera());
+    
+
+    // here we will have the great cookie of the scripts
+    
+    
+    renderer.renderScene(&scene, editor.getCamera());
     platform.update();
     return !platform.shouldClose();
 }
