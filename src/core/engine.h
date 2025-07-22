@@ -6,6 +6,7 @@
 #include "core/engineContext.h"
 #include "editor/editor.h"
 #include "scene/scene.h"
+#include "core/script.h"
 
 class Engine
 {
@@ -31,15 +32,11 @@ int Engine::init(){
     gEngineContext->inputManager = &inputManager;
     gEngineContext->renderer = &renderer;
     gEngineContext->platform = &platform;
+    gEngineContext->activeScene = &scene;
     
     bool editorSuccessful = editor.init();
 
     std::cout<<platformSuccessful<<rendererSuccessful<<editorSuccessful<<"\n";
-    // and thsi one is ***TEMP***
-    GameObject* first = scene.instanctiate();
-    GameObject* second = scene.instanctiate();
-    second->transform.setPosition({0.0f, 2.0f, 0.0f});
-    // and thsi one is ***TEMP***
     if(platformSuccessful && rendererSuccessful && editorSuccessful) return 1;
     return -1;
 }
@@ -47,6 +44,7 @@ int Engine::init(){
 // returns false if should close
 bool Engine::update(){
     editor.processInput();
+    scene.Update();
     
 
     // here we will have the great cookie of the scripts

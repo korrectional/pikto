@@ -3,6 +3,9 @@
 #include "core/engineContext.h"
 #include "scene/transform.h"
 
+///// ***TEMP***
+#include "blockMove.h"
+
 class Editor
 {
 private:
@@ -18,7 +21,7 @@ public:
     bool init();
     Camera* getCamera();
     float lastX = 400;
-    float lastY = 300;    
+    float lastY = 300;
 };
 
 void mouseInput(GLFWwindow* window, double xpos, double ypos){
@@ -74,6 +77,12 @@ void Editor::processInput(){
     if(inputManager->isKeyPressed(GLFW_KEY_RIGHT)) editorCamera.transform.moveRotation({0.0f, 0.02f, 0.0f});
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT)) editorCamera.transform.moveRotation({0.0f, -0.02f, 0.0f});
 
+    // ***TEMP***
+    if(inputManager->isKeyPressed(GLFW_KEY_I)){
+        GameObject* gm = gEngineContext->activeScene->instanctiate();
+        gm->addScript<BlockMove>();
+    }
+    
 }
 
 Camera* Editor::getCamera(){

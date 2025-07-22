@@ -12,16 +12,24 @@ public:
 
     void Update();
     template<typename... Args>
-    GameObject* instanctiate(Args&&... args);
+    GameObject* instantiate(Args&&... args);
 };
 
 /* # note to self : you dont know this hsit learn beter # */
 template<typename... Args>
-GameObject* Scene::instanctiate(Args&&... args){
+GameObject* Scene::instantiate(Args&&... args){
     auto obj = std::make_unique<GameObject>(std::forward<Args>(args)...);
     GameObject* ptr = obj.get();
     gameObjects.push_back(std::move(obj));
     // this one is optional really, but being done here.
     ptr->setupDefault();
     return ptr;
+}
+
+void Scene::Update(){
+    for(auto& gameObject : gameObjects){
+        for(auto& script : gameObject->scripts){
+            script->OnUpdate(44.0f);
+        }
+    }
 }
