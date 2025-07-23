@@ -7,6 +7,8 @@ class Platform
 {
 private:
     GLFWwindow* window;
+    float lastFrame;
+    float currentFrame;
 public:
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     bool shouldClose();
@@ -19,6 +21,7 @@ public:
     void disableCursor();
     void enableCursor();
     float getTime();
+    float deltaTime = 0.0f;
 };
 //GLFWwindow* window, double xpos, double ypos
 void Platform::framebufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -62,6 +65,9 @@ void Platform::enableCursor(){
 }
 
 void Platform::update(){
+    currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

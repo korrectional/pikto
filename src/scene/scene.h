@@ -3,16 +3,20 @@
 #include <memory>
 #include <vector>
 #include "scene/gameObject.h"
+#include "graphics/camera.h"
 
 class Scene
 {
 private:
 public:
     std::vector<std::unique_ptr<GameObject>> gameObjects;
+    Camera sceneCamera; 
 
-    void Update();
+    void Update(float deltaTime);
+    void Start();
     template<typename... Args>
     GameObject* instantiate(Args&&... args);
+    Camera* getCamera();
 };
 
 /* # note to self : you dont know this hsit learn beter # */
@@ -26,10 +30,25 @@ GameObject* Scene::instantiate(Args&&... args){
     return ptr;
 }
 
-void Scene::Update(){
+void Scene::Update(float deltaTime){
     for(auto& gameObject : gameObjects){
         for(auto& script : gameObject->scripts){
-            script->OnUpdate(44.0f);
+            script->OnUpdate(deltaTime);
         }
     }
+}
+
+void Scene::Start(){
+    
+    for(int i = gameObjects.size() - 1; i >= 0; i--){
+        if(gameObjects[i]->scripts.empty()) continue;
+        for(int j = gameObjects[i]->scripts.size() - 1; j >= 0; j--){
+            gameObjects[i]->scripts[j]->OnCreate();
+        }
+    }
+    std::cout<<"Finished starting the scene\n";
+}
+
+Camera* Scene::getCamera(){
+    return &sceneCamera;
 }

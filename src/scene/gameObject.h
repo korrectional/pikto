@@ -12,13 +12,13 @@ class GameObject
 private:
     
 public:
-    std::string name = "";
+    std::string name = "default";
     Transform transform;
     Mesh mesh;
     Material material;
 
     // vector of scripts to be executed on this gameobject
-    std::vector<std::unique_ptr<Script>> scripts; 
+    std::vector<std::unique_ptr<Script>> scripts;
 
     template<typename T, typename... Args>
     T* addScript(Args&&... args);

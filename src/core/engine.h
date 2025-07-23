@@ -21,6 +21,8 @@ public:
     int init();
     bool update();
     void shutdown();
+
+    int ticks = 0;
 };
 
 int Engine::init(){
@@ -43,14 +45,19 @@ int Engine::init(){
 
 // returns false if should close
 bool Engine::update(){
-    editor.processInput();
-    scene.Update();
+    if(editor.runningGame){
+        if(ticks == 0){
+            scene.Start();
+        }
+        ticks++;
+        scene.Update(platform.deltaTime);
+    }
+    else{
+        ticks = 0;
+        editor.processInput(platform.deltaTime);
+    }
     
-
-    // here we will have the great cookie of the scripts
-    
-    
-    renderer.renderScene(&scene, editor.getCamera());
+    renderer.renderScene(&scene, editor.runningGame ? scene.getCamera() : editor.getCamera());
     platform.update();
     return !platform.shouldClose();
 }

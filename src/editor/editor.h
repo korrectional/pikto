@@ -12,16 +12,13 @@ private:
     InputManager* inputManager;
     Platform* platform;
     Camera editorCamera;
-    
-    float deltaTime; // difference of time between current and last frame
-    float lastFrame;
-    float currentFrame;
 public:
-    void processInput();
+    void processInput(float deltaTime);
     bool init();
     Camera* getCamera();
     float lastX = 400;
     float lastY = 300;
+    bool runningGame;
 };
 
 void mouseInput(GLFWwindow* window, double xpos, double ypos){
@@ -46,6 +43,7 @@ void mouseInput(GLFWwindow* window, double xpos, double ypos){
 }
 
 bool Editor::init(){
+    runningGame = false;
     inputManager = gEngineContext->inputManager;
     platform = gEngineContext->platform;
     editorCamera.transform.setPosition({0.0f, 0.0f, 5.0f});
@@ -55,11 +53,8 @@ bool Editor::init(){
     return 1;
 }
 
-void Editor::processInput(){
+void Editor::processInput(float deltaTime){
     // calculate deltaTime first
-    currentFrame = platform->getTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
     float camSpeed = 2.0f * deltaTime;
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT_CONTROL)) camSpeed*=2.0f;
     
@@ -76,12 +71,15 @@ void Editor::processInput(){
     if(inputManager->isKeyPressed(GLFW_KEY_DOWN)) editorCamera.transform.moveRotation({-0.02f, 0.0f, 0.0f});
     if(inputManager->isKeyPressed(GLFW_KEY_RIGHT)) editorCamera.transform.moveRotation({0.0f, 0.02f, 0.0f});
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT)) editorCamera.transform.moveRotation({0.0f, -0.02f, 0.0f});
-
-    // ***TEMP***
+    
+    // ***TEMP*** this acts as a placeholder for future gameobject creation UI
     if(inputManager->isKeyPressed(GLFW_KEY_I)){
-        GameObject* gm = gEngineContext->activeScene->instanctiate();
-        gm->addScript<BlockMove>();
+        if(gEngineContext->activeScene->gameObjects.size() < 1){
+            GameObject* gm = gEngineContext->activeScene->instantiate();
+            gm->addScript<BlockMove>();
+        }
     }
+    if(inputManager->isKeyPressed(GLFW_KEY_P)) runningGame = !runningGame;
     
 }
 
