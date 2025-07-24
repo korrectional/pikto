@@ -17,6 +17,7 @@ public:
     void update();
     GLFWwindow* getWindow();
     bool isKeyPressed(int key);
+    bool isKeyReleased(int key);
     void setMouseCallback(void (*func)(GLFWwindow* window, double xpos, double ypos));
     void disableCursor();
     void enableCursor();
@@ -78,6 +79,10 @@ GLFWwindow* Platform::getWindow(){
 
 bool Platform::isKeyPressed(int key){
     return glfwGetKey(window, key) == GLFW_PRESS;
+}
+
+bool Platform::isKeyReleased(int key){
+    return glfwGetKey(window, key) == GLFW_RELEASE;
 }
 
 void Platform::setMouseCallback(void (*callbackFunction)(GLFWwindow* window, double xpos, double ypos)){

@@ -22,6 +22,9 @@ public:
     bool update();
     void shutdown();
 
+    //this is a debug function to be used by the user to return to the editor without having to reopen the game
+    void debugStopGame();
+
     int ticks = 0;
 };
 
@@ -35,6 +38,7 @@ int Engine::init(){
     gEngineContext->renderer = &renderer;
     gEngineContext->platform = &platform;
     gEngineContext->activeScene = &scene;
+    
     
     bool editorSuccessful = editor.init();
 
@@ -51,16 +55,22 @@ bool Engine::update(){
         }
         ticks++;
         scene.Update(platform.deltaTime);
+
     }
     else{
         ticks = 0;
-        editor.processInput(platform.deltaTime);
     }
+    // Input
+    inputManager.update();
+
+    // UI and such when the game is running in the built in 
+    editor.processInput(platform.deltaTime);
     
     renderer.renderScene(&scene, editor.runningGame ? scene.getCamera() : editor.getCamera());
     platform.update();
     return !platform.shouldClose();
 }
+
 
 void Engine::shutdown(){
     platform.shutdown();

@@ -15,5 +15,6 @@ public:
     }
     void OnUpdate(float deltaTime) override {
         second->transform.movePosition({0.0f, 1.0f * deltaTime, 0.0f});
+        if(engine->inputManager->isKeyPressed(GLFW_KEY_ESCAPE)) engine->platform->shutdown();
     }
 };

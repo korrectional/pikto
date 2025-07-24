@@ -54,6 +54,11 @@ bool Editor::init(){
 }
 
 void Editor::processInput(float deltaTime){
+    if(runningGame){
+        if(inputManager->isKeyJustReleased(GLFW_KEY_P)) runningGame = !runningGame;
+        return;
+    }
+
     // calculate deltaTime first
     float camSpeed = 2.0f * deltaTime;
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT_CONTROL)) camSpeed*=2.0f;
@@ -79,7 +84,7 @@ void Editor::processInput(float deltaTime){
             gm->addScript<BlockMove>();
         }
     }
-    if(inputManager->isKeyPressed(GLFW_KEY_P)) runningGame = !runningGame;
+    if(inputManager->isKeyJustReleased(GLFW_KEY_P)) runningGame = !runningGame;
     
 }
 
