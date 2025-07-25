@@ -92,7 +92,11 @@ void Renderer::renderScene(Scene* scene, Camera* camera){
         gameObject->material.render();
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, gameObject->transform.position);
-        shaderProgram->setMat4(modelLoc, model);    
+        model = glm::rotate(model, glm::radians(gameObject->transform.rotation.x), glm::vec3(1,0,0));
+        model = glm::rotate(model, glm::radians(gameObject->transform.rotation.y), glm::vec3(0,1,0));
+        model = glm::rotate(model, glm::radians(gameObject->transform.rotation.z), glm::vec3(0,0,1));
+        model = glm::scale(model, gameObject->transform.scale);
+        shaderProgram->setMat4(modelLoc, model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 

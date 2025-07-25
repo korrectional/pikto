@@ -28,6 +28,7 @@ public:
 template<typename T, typename... Args>
 T* GameObject::addScript(Args&&... args) {
     auto script = std::make_unique<T>(std::forward<Args>(args)...);
+    script->owner = this;
     T* ptr = script.get();
     scripts.push_back(std::move(script));
     return ptr;

@@ -6,13 +6,16 @@
 class Transform
 {
 public:
-    glm::vec3 position = {0.0f, 0.0f, 0.0f};
+    glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 scale =    glm::vec3(1.0f, 1.0f, 1.0f);
     void setPosition(glm::vec3 position);
     void movePosition(glm::vec3 move);
+    glm::mat4 getPositionMat4();
     void setRotation(glm::vec3 rotation);
     void moveRotation(glm::vec3 rotate);
-    glm::mat4 getPositionMat4();
+    void setScale(glm::vec3 scale);
+    void moveScale(glm::vec3 scale);
 };
 
 void Transform::setPosition(glm::vec3 position){
@@ -38,4 +41,14 @@ void Transform::moveRotation(glm::vec3 rotate){
     this->rotation.x += rotate.x;
     this->rotation.y += rotate.y;
     this->rotation.z += rotate.z;
+}
+
+void Transform::setScale(glm::vec3 scale){
+    this->scale = scale;
+}
+
+void Transform::moveScale(glm::vec3 scale){
+    this->scale.x += scale.x;
+    this->scale.y += scale.y;
+    this->scale.z += scale.z;
 }
