@@ -12,6 +12,9 @@
 #include "scene/scene.h"
 #include "scene/gameObject.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 class Renderer
 {
@@ -29,6 +32,8 @@ public:
 };
 
 int Renderer::init(){
+    std::cout<<IMGUI_CHECKVERSION()<<"\n";
+
     // openGL is here!
     glViewport(0, 0, WIDTH, HEIGHT);
     

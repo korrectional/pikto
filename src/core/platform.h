@@ -21,6 +21,7 @@ public:
     void setMouseCallback(void (*func)(GLFWwindow* window, double xpos, double ypos));
     void disableCursor();
     void enableCursor();
+    void changeCursorVisibility();
     float getTime();
     float deltaTime = 0.0f;
 };
@@ -52,7 +53,7 @@ int Platform::initWindow()
     window = glfwCreateWindow(WIDTH, HEIGHT, "Pick2", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, Platform::framebufferSizeCallback); // this function is called when window resized
-    disableCursor();
+    enableCursor();
     // init glad
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {std::cout<<"Failed to init GLAD\n"; return -1;}
     return 1;
@@ -63,6 +64,15 @@ void Platform::disableCursor(){
 }
 void Platform::enableCursor(){
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+void Platform::changeCursorVisibility(){
+    if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL){
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    
+    if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED){
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 void Platform::update(){

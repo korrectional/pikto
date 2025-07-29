@@ -2,6 +2,8 @@
 #include "input/inputManager.h"
 #include "core/engineContext.h"
 #include "scene/transform.h"
+#include "editor/editorUI.h"
+#include "core/platform.h"
 
 ///// ***TEMP***
 #include "blockMove.h"
@@ -12,13 +14,14 @@ private:
     InputManager* inputManager;
     Platform* platform;
     Camera editorCamera;
-public:
+    public:
     void processInput(float deltaTime);
-    bool init();
+    bool init(GLFWwindow* window);
     Camera* getCamera();
     float lastX = 400;
     float lastY = 300;
     bool runningGame;
+    EditorUI editorUI;
 };
 
 void mouseInput(GLFWwindow* window, double xpos, double ypos){
@@ -42,7 +45,7 @@ void mouseInput(GLFWwindow* window, double xpos, double ypos){
     if(tempCam->transform.rotation.x>89.0f)  tempCam->transform.rotation.x = 89.0f;
 }
 
-bool Editor::init(){
+bool Editor::init(GLFWwindow* window){
     runningGame = false;
     inputManager = gEngineContext->inputManager;
     platform = gEngineContext->platform;
@@ -50,6 +53,7 @@ bool Editor::init(){
     editorCamera.transform.setRotation({0.0f, -90.0f, 0.0f});
     glfwSetWindowUserPointer(platform->getWindow(), this);
     platform->setMouseCallback(mouseInput);
+    editorUI.init(window);
     return 1;
 }
 
@@ -64,7 +68,7 @@ void Editor::processInput(float deltaTime){
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT_CONTROL)) camSpeed*=2.0f;
     
     if(inputManager->isKeyPressed(GLFW_KEY_ESCAPE)) platform->shutdown();
-    if(inputManager->isKeyPressed(GLFW_KEY_BACKSPACE)) platform->enableCursor();
+    if(inputManager->isKeyPressed(GLFW_KEY_BACKSPACE)) platform->changeCursorVisibility();
     if(inputManager->isKeyPressed(GLFW_KEY_W)) editorCamera.transform.movePosition(editorCamera.cameraFront * camSpeed);
     if(inputManager->isKeyPressed(GLFW_KEY_S)) editorCamera.transform.movePosition(editorCamera.cameraFront * -camSpeed);
     if(inputManager->isKeyPressed(GLFW_KEY_A)) editorCamera.transform.movePosition(glm::normalize(glm::cross(editorCamera.cameraFront, editorCamera.cameraUp)) * -camSpeed);

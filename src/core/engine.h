@@ -39,8 +39,7 @@ int Engine::init(){
     gEngineContext->platform = &platform;
     gEngineContext->activeScene = &scene;
     
-    
-    bool editorSuccessful = editor.init();
+    bool editorSuccessful = editor.init(platform.getWindow());
 
     std::cout<<platformSuccessful<<rendererSuccessful<<editorSuccessful<<"\n";
     if(platformSuccessful && rendererSuccessful && editorSuccessful) return 1;
@@ -59,14 +58,15 @@ bool Engine::update(){
     }
     else{
         ticks = 0;
+        editor.editorUI.updateFirst();
     }
     // Input
     inputManager.update();
 
-    // UI and such when the game is running in the built in 
     editor.processInput(platform.deltaTime);
     
     renderer.renderScene(&scene, editor.runningGame ? scene.getCamera() : editor.getCamera());
+    editor.editorUI.updateLast();
     platform.update();
     return !platform.shouldClose();
 }
