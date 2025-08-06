@@ -69,8 +69,7 @@ void Platform::changeCursorVisibility(){
     if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL){
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
-    
-    if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED){
+    else if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED){
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }

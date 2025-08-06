@@ -23,23 +23,28 @@ private:
     int viewLoc;
     int projectionLoc;
     Shader* shaderProgram = nullptr; // Use pointer, initialize later
-    unsigned int texture;
-
+    unsigned int FBO;
+    unsigned int RBO;
+    
 public:
     Renderer() {} // Remove shaderProgram construction here
     int init();
     void renderScene(Scene* scene, Camera* camera);
+    unsigned int textureColorbuffer;
 };
 
 int Renderer::init(){
     std::cout<<IMGUI_CHECKVERSION()<<"\n";
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE){
+        std::cout<<"Domplete";
+    }
 
     // openGL is here!
     glViewport(0, 0, WIDTH, HEIGHT);
     
 
+    //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClearColor(0.3f, 0.5f, 0.9f, 1.0f); // classic=0.4f, 0.6f, 1.0f, 1.0f
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     
     shaderProgram = new Shader("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
 
@@ -50,9 +55,22 @@ int Renderer::init(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // THIS IS WHERE THE USUAL TEXTURE STUFF USED TO HAPPEN
+    // create framebuffer and put it on a texture
+    glGenFramebuffers(1, &FBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glGenTextures(1, &textureColorbuffer);
+    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorbuffer, 0);
+    
+    unsigned int RBO;
+    glGenRenderbuffers(1, &RBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
-    // THIS IS WHERE THE USUAL ARRAY STUFF USED TO HAPPEN
 
     glPolygonMode(GL_FRONT_AND_BACK, (true ? GL_FILL : GL_LINE));
     glEnable(GL_DEPTH_TEST);
@@ -72,6 +90,7 @@ int Renderer::init(){
 }
 
 void Renderer::renderScene(Scene* scene, Camera* camera){
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderProgram->use();
@@ -105,5 +124,5 @@ void Renderer::renderScene(Scene* scene, Camera* camera){
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
-    
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
