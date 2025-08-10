@@ -7,6 +7,8 @@
 #include "core/platform.h"
 #include "core/engineContext.h"
 #include "scene/gameObject.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
+#include "glm/glm.hpp"
 
 class EditorUI
 {
@@ -81,6 +83,10 @@ void EditorUI::updateFirst(){
     // gameobject list window
     ImGui::Begin("GOs");
 
+    if(ImGui::Button("+", ImVec2(20,20))){
+        gEngineContext->activeScene->instantiate();
+    }
+
     for(int gm = 0; gm < gEngineContext->activeScene->gameObjects.size(); gm++){
         GameObject* currentObj = gEngineContext->activeScene->gameObjects[gm].get();
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
@@ -98,9 +104,17 @@ void EditorUI::updateFirst(){
     // modify values of selected GO
     ImGui::Begin("Upclose");
     if(selectedObj != nullptr){
-        ImGui::Text(selectedObj->name.c_str());
-        ImGui::Text("X: %.2f", selectedObj->transform.position.x);
+        std::string nameCopy = selectedObj->name;
+        ImGui::InputText("##", &nameCopy);
+        selectedObj->name = nameCopy;
+        
+        ImGui::DragFloat3("Pos", glm::value_ptr(selectedObj->transform.position));
+        ImGui::DragFloat3("Rot", glm::value_ptr(selectedObj->transform.rotation));
+        ImGui::DragFloat3("Sca", glm::value_ptr(selectedObj->transform.scale));
+    
     }
+    
+
     ImGui::End();
 }
 

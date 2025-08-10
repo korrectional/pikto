@@ -67,7 +67,7 @@ void Editor::processInput(float deltaTime){
     float camSpeed = 2.0f * deltaTime;
     if(inputManager->isKeyPressed(GLFW_KEY_LEFT_CONTROL)) camSpeed*=2.0f;
     
-    if(inputManager->isKeyPressed(GLFW_KEY_ESCAPE)) platform->shutdown();
+    if(inputManager->isKeyPressed(GLFW_KEY_EQUAL)) platform->shutdown();
     if(inputManager->isKeyJustReleased(GLFW_KEY_BACKSPACE)) platform->changeCursorVisibility();
     if(inputManager->isKeyPressed(GLFW_KEY_W)) editorCamera.transform.movePosition(editorCamera.cameraFront * camSpeed);
     if(inputManager->isKeyPressed(GLFW_KEY_S)) editorCamera.transform.movePosition(editorCamera.cameraFront * -camSpeed);

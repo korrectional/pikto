@@ -27,6 +27,7 @@ GameObject* Scene::instantiate(Args&&... args){
     gameObjects.push_back(std::move(obj));
     // this one is optional really, but being done here.
     ptr->setupDefault();
+    ptr->name = "GO"+std::to_string(gameObjects.size());
     return ptr;
 }
 
